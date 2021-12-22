@@ -3,6 +3,11 @@
 
 from flask_restx import Namespace, Resource, fields
 from app.db import tweet_repository
+from flask import Flask
+from flask import jsonify
+from flask import abort
+from flask import request
+from app.models import Tweet
 
 api = Namespace('tweets')
 
@@ -12,7 +17,7 @@ tweet = api.model('Tweet', {
     'created_at': fields.DateTime
 })
 
-@api.route('/<int:id>')
+@api.route('/<int:id>', methods=['GET'])
 @api.response(404, 'Tweet not found')
 @api.param('id', 'The tweet unique identifier')
 class TweetResource(Resource):
@@ -23,3 +28,17 @@ class TweetResource(Resource):
             api.abort(404)
         else:
             return tweet
+
+@api.route('/add', methods=['POST'])
+@api.response(404, 'Tweet not found')
+class CreateTweet(Resource):
+    def post(self):
+        data = request.get_json()
+        if data is None:
+            api.abort(400)
+        text = data.get('text')
+        if text is None:
+            api.abort(400)
+        tweet = Tweet(text)
+        tweet_repository.add(tweet)
+        return 'tweet inséré', 200
