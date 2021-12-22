@@ -58,3 +58,17 @@ class UpdateTweet(Resource):
         tweet_repository.update(tweet, text)
         return 'tweet à jour', 200
 
+@api.route('/', methods=['DELETE'])
+@api.response(404, 'Tweet not found')
+class TweetResource(Resource):
+    def delete(self):
+        tweet_repository.clear()
+        return 'tous les tweets supprimés', 200
+
+@api.route('/<int:id>', methods=['DELETE'])
+@api.response(404, 'Tweet not found')
+class TweetResource(Resource):
+    def delete(self, id):
+        tweet = tweet_repository.get(id)
+        tweet_repository.delete(tweet)
+        return 'tweet supprimé', 200

@@ -13,6 +13,11 @@ class TweetRepository:
     def update(self, tweet, text):
       tweet.text = text
 
+    def delete(self, tweet):
+      tweet.id = None
+      tweet.text = None
+      tweet.created_at = None
+
     def get(self, id):
       for tweet in self.tweets:
           if tweet.id == id:
