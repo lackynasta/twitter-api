@@ -42,3 +42,19 @@ class CreateTweet(Resource):
         tweet = Tweet(text)
         tweet_repository.add(tweet)
         return 'tweet inséré', 200
+
+@api.route('/<int:id>', methods=['PATCH'])
+@api.response(404, 'Tweet not found')
+@api.param('id', 'The tweet unique identifier')
+class UpdateTweet(Resource):
+    def patch(self, id):
+        data = request.get_json()
+        if data is None:
+            api.abort(400)
+        text = data.get('text')
+        if text is None:
+            api.abort(400)
+        tweet = tweet_repository.get(id)
+        tweet_repository.update(tweet, text)
+        return 'tweet à jour', 200
+

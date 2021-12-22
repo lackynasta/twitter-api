@@ -10,6 +10,9 @@ class TweetRepository:
         tweet.id = self.next_id
         self.next_id += 1
 
+    def update(self, tweet, text):
+      tweet.text = text
+
     def get(self, id):
       for tweet in self.tweets:
           if tweet.id == id:
